@@ -60,7 +60,7 @@ body {
     margin-top: 30px;
 }
 
-/* ANIMATION START STATE */
+/* IMAGES */
 .reveal {
     width: 280px;
     border-radius: 12px;
@@ -71,15 +71,45 @@ body {
     filter: blur(6px);
 
     transition: all 0.7s ease;
-
-    cursor: pointer; /* 👈 makes it obvious you can click */
+    cursor: pointer; /* 👈 important */
 }
 
-/* WHEN VISIBLE */
 .reveal.show {
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
+}
+
+/* 💥 LIGHTBOX (ZOOM VIEW) */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s ease;
+    z-index: 999;
+}
+
+.lightbox.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(255,0,0,0.4);
+    transform: scale(0.85);
+    transition: 0.25s ease;
+}
+
+.lightbox.active img {
+    transform: scale(1);
 }
 
 /* FOOTER */
@@ -88,55 +118,12 @@ footer {
     color: #777;
     font-size: 0.8rem;
 }
-
-/* ================= LIGHTBOX ================= */
-.lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.88);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.lightbox.show {
-    display: flex;
-}
-
-.lightbox img {
-    max-width: 95%;
-    max-height: 90%;
-    border-radius: 14px;
-    border: 2px solid rgba(255, 0, 0, 0.6);
-    box-shadow: 0 0 35px rgba(255, 0, 0, 0.3);
-}
-
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    user-select: none;
-    transition: 0.2s;
-}
-
-.close-btn:hover {
-    color: red;
-    transform: scale(1.15);
-}
 </style>
 
 </head>
 <body>
 
-<!-- HERO SECTION -->
+<!-- HERO -->
 <div class="hero">
     <h1>Universal Controller Lab</h1>
     <p>Professional gamepad testing tool with calibration, latency test & analytics</p>
@@ -146,7 +133,7 @@ footer {
     </a>
 </div>
 
-<!-- PREVIEW SECTION -->
+<!-- PREVIEW -->
 <div class="section">
     <h2>📸 App Preview</h2>
 
@@ -172,14 +159,13 @@ footer {
     Made by Izumi Kurogane | © 2026 All rights reserved
 </footer>
 
-<!-- LIGHTBOX POPUP -->
+<!-- 💥 LIGHTBOX -->
 <div class="lightbox" id="lightbox">
-    <span class="close-btn" id="closeBtn">&times;</span>
-    <img id="lightboxImg" src="">
+    <img id="lightbox-img" src="">
 </div>
 
-<!-- SCROLL ANIMATION SCRIPT -->
 <script>
+/* scroll reveal */
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -188,44 +174,32 @@ const observer = new IntersectionObserver((entries) => {
             entry.target.classList.remove("show");
         }
     });
-}, {
-    threshold: 0.2
-});
+}, { threshold: 0.2 });
 
 document.querySelectorAll(".reveal").forEach(el => {
     observer.observe(el);
 });
-</script>
 
-<!-- LIGHTBOX SCRIPT -->
-<script>
+/* 💥 CLICK TO ZOOM */
 const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightboxImg");
-const closeBtn = document.getElementById("closeBtn");
+const lightboxImg = document.getElementById("lightbox-img");
 
 document.querySelectorAll(".reveal").forEach(img => {
     img.addEventListener("click", () => {
+        lightbox.classList.add("active");
         lightboxImg.src = img.src;
-        lightbox.classList.add("show");
     });
 });
 
-// close button
-closeBtn.addEventListener("click", () => {
-    lightbox.classList.remove("show");
+/* close when clicking background */
+lightbox.addEventListener("click", () => {
+    lightbox.classList.remove("active");
 });
 
-// click outside image closes it
-lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) {
-        lightbox.classList.remove("show");
-    }
-});
-
-// ESC closes it
+/* ESC to close */
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-        lightbox.classList.remove("show");
+        lightbox.classList.remove("active");
     }
 });
 </script>
