@@ -71,7 +71,7 @@ body {
     filter: blur(6px);
 
     transition: all 0.7s ease;
-    cursor: pointer; /* 👈 important */
+    cursor: pointer;
 }
 
 .reveal.show {
@@ -80,7 +80,7 @@ body {
     filter: blur(0);
 }
 
-/* 💥 LIGHTBOX (ZOOM VIEW) */
+/* LIGHTBOX */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -118,10 +118,135 @@ footer {
     color: #777;
     font-size: 0.8rem;
 }
+
+/* ========================= */
+/* ⚡ BOOT SPLASH (GLASS WINDOW) */
+/* ========================= */
+
+#bootSplash {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #1a0000, #000);
+    z-index: 9999;
+}
+
+.glassWindow {
+    width: 380px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 42, 42, 0.3);
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.windowTopBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(0,0,0,0.4);
+    border-bottom: 1px solid rgba(255, 42, 42, 0.2);
+}
+
+.dots {
+    display: flex;
+    gap: 6px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.red { background: #ff5f56; }
+.yellow { background: #ffbd2e; }
+.green { background: #27c93f; }
+
+.windowTopBar .title {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+}
+
+.content {
+    padding: 25px;
+    text-align: center;
+    color: #ff2a2a;
+}
+
+.glitchTitle {
+    font-size: 20px;
+    margin-bottom: 18px;
+    text-shadow: 0 0 10px #ff2a2a;
+    animation: flicker 2.8s infinite;
+}
+
+.loaderTrack {
+    width: 100%;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+    border: 1px solid rgba(255,42,42,0.4);
+}
+
+.loaderBar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff0000, #ff4d4d);
+    transition: width 0.08s linear;
+    box-shadow: 0 0 12px red;
+}
+
+.percent {
+    margin-top: 10px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.4; }
+    94% { opacity: 1; }
+    97% { opacity: 0.2; }
+    98% { opacity: 1; }
+}
 </style>
 
 </head>
 <body>
+
+<!-- ⚡ BOOT SPLASH -->
+<div id="bootSplash">
+    <div class="glassWindow">
+
+        <div class="windowTopBar">
+            <div class="dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <div class="title">Universal Controller Lab</div>
+        </div>
+
+        <div class="content">
+            <div class="glitchTitle">Booting System</div>
+
+            <div class="loaderTrack">
+                <div class="loaderBar"></div>
+            </div>
+
+            <div class="percent" id="bootPercent">0%</div>
+        </div>
+
+    </div>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -159,12 +284,42 @@ footer {
     Made by Izumi Kurogane | © 2026 All rights reserved
 </footer>
 
-<!-- 💥 LIGHTBOX -->
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
     <img id="lightbox-img" src="">
 </div>
 
 <script>
+
+/* ⚡ BOOT LOADER */
+let progress = 0;
+
+const bar = document.querySelector(".loaderBar");
+const percent = document.getElementById("bootPercent");
+const splash = document.getElementById("bootSplash");
+
+const boot = setInterval(() => {
+    progress += 1.4;
+
+    bar.style.width = progress + "%";
+    percent.innerText = Math.floor(progress) + "%";
+
+    if (progress >= 100) {
+        clearInterval(boot);
+
+        setTimeout(() => {
+            splash.style.transition = "0.8s ease";
+            splash.style.opacity = "0";
+            splash.style.transform = "scale(1.05)";
+
+            setTimeout(() => {
+                splash.style.display = "none";
+            }, 800);
+
+        }, 300);
+    }
+}, 25);
+
 /* scroll reveal */
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -180,7 +335,7 @@ document.querySelectorAll(".reveal").forEach(el => {
     observer.observe(el);
 });
 
-/* 💥 CLICK TO ZOOM */
+/* lightbox */
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 
@@ -191,17 +346,16 @@ document.querySelectorAll(".reveal").forEach(img => {
     });
 });
 
-/* close when clicking background */
 lightbox.addEventListener("click", () => {
     lightbox.classList.remove("active");
 });
 
-/* ESC to close */
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
         lightbox.classList.remove("active");
     }
 });
+
 </script>
 
 </body>
