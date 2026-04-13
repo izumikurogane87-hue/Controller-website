@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controller Lab - Download</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card: #121212;
+            --accent: #ff0000;
+            --text: #ffffff;
+            --muted: #888;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at top, rgba(255,0,0,0.15), transparent 40%), var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(255,0,0,0.2);
+            border: 1px solid rgba(255,0,0,0.3);
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255,0,0,0.4);
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255,0,0,0.6);
+        }
+
+        .version {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Controller Lab</h1>
+        <p>
+            A next-gen controller testing & diagnostics tool.
+            Measure latency, detect drift, test inputs, and monitor controller health in real time.
+        </p>
+
+        <a class="btn" href="https://github.com/izumikurogane87-hue/Controller-Download-Page/releases/download/v1.0.0/universal-controller-lab_0.1.0_x64-setup.exe" download>
+            ⬇ Download Setup (.exe)
+        </a>
+
+        <div class="version">Latest Version: v1.0.0</div>
+        <div class="footer">Made by Izumi Kurogane | © 2026 All rights reserved</div>
+    </div>
+</body>
+</html>
