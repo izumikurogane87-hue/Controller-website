@@ -71,6 +71,8 @@ body {
     filter: blur(6px);
 
     transition: all 0.7s ease;
+
+    cursor: pointer; /* 👈 makes it obvious you can click */
 }
 
 /* WHEN VISIBLE */
@@ -85,6 +87,49 @@ footer {
     padding: 40px;
     color: #777;
     font-size: 0.8rem;
+}
+
+/* ================= LIGHTBOX ================= */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.lightbox.show {
+    display: flex;
+}
+
+.lightbox img {
+    max-width: 95%;
+    max-height: 90%;
+    border-radius: 14px;
+    border: 2px solid rgba(255, 0, 0, 0.6);
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.3);
+}
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.2s;
+}
+
+.close-btn:hover {
+    color: red;
+    transform: scale(1.15);
 }
 </style>
 
@@ -127,6 +172,12 @@ footer {
     Made by Izumi Kurogane | © 2026 All rights reserved
 </footer>
 
+<!-- LIGHTBOX POPUP -->
+<div class="lightbox" id="lightbox">
+    <span class="close-btn" id="closeBtn">&times;</span>
+    <img id="lightboxImg" src="">
+</div>
+
 <!-- SCROLL ANIMATION SCRIPT -->
 <script>
 const observer = new IntersectionObserver((entries) => {
@@ -143,6 +194,39 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll(".reveal").forEach(el => {
     observer.observe(el);
+});
+</script>
+
+<!-- LIGHTBOX SCRIPT -->
+<script>
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const closeBtn = document.getElementById("closeBtn");
+
+document.querySelectorAll(".reveal").forEach(img => {
+    img.addEventListener("click", () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add("show");
+    });
+});
+
+// close button
+closeBtn.addEventListener("click", () => {
+    lightbox.classList.remove("show");
+});
+
+// click outside image closes it
+lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+        lightbox.classList.remove("show");
+    }
+});
+
+// ESC closes it
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        lightbox.classList.remove("show");
+    }
 });
 </script>
 
